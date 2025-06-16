@@ -1,0 +1,85 @@
+<!-- templates/report_template.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report de Indicadores - 10/06/2025</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            color: #333;
+        }
+        h1 {
+            color: #0056b3;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 3px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .footer {
+            margin-top: 14px;
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Report de Indicadores - 10/06/2025</h1>
+
+    <p>Olá Equipe,</p>
+    <p>Segue o Report de Indicadores - Diretoria referente à data de hoje.</p>
+
+    <!-- O DataFrame do Pandas será renderizado aqui -->
+    <table border="1" class="dataframe table table-striped">
+  <thead>
+    <tr style="text-align: right;">
+      <th>DATA</th>
+      <th>FATURAMENTO</th>
+      <th>META</th>
+      <th>ALCANCE_DIARIO</th>
+      <th>FAT_MTD_ATUAL</th>
+      <th>META_MTD</th>
+      <th>CRESCIMENTO_MTD</th>
+      <th>ALCANCE_MTD</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2025-06-09</td>
+      <td>7,784,988.33</td>
+      <td>8,465,367.01</td>
+      <td>91.96%</td>
+      <td>65,149,400.80</td>
+      <td>67295925.19</td>
+      <td>13.29%</td>
+      <td>96.81%</td>
+    </tr>
+  </tbody>
+</table>
+
+    <div class="footer">
+        <p>Este é um e-mail gerado automaticamente.</p>
+    </div>
+
+</body>
+</html>

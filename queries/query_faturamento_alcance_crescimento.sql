@@ -1,0 +1,116 @@
+WITH 
+BASE_VENDAS AS (
+    SELECT
+        A.DATA,
+        CAST(SUM(VL_VENDA) AS FLOAT) AS FATURAMENTO
+    FROM FT_EMAIL_OPERACOES_VENDAS_TOTAL A WITH(NOLOCK)
+    GROUP BY A.DATA
+),
+BASE_METAS AS (
+    SELECT
+        DATA,
+        CAST(SUM(META) AS FLOAT) AS META
+    FROM FT_EMAIL_OPERACOES_METAS B
+    WHERE ANO_ATUAL = 1
+    GROUP BY DATA
+)
+
+--- QUERY FINAL ---
+, DF_VENDAS AS (
+SELECT
+    ATUAL.DATA,
+    ATUAL.FATURAMENTO											AS FATURAMENTO_ONTEM,
+	B.META														AS META_ONTEM,
+    CAST(ATUAL.FATURAMENTO AS FLOAT) / NULLIF(B.META, 0) 	AS ALCANCE_ONTEM,
+
+	-- CALCULANDO VIA TABELA DE FREQUENCIA --
+    -- Acumulado FATURAMENTO mês até hoje
+    SUM(ATUAL.FATURAMENTO) 
+        OVER (
+            PARTITION BY YEAR(ATUAL.DATA), 
+                         MONTH(ATUAL.DATA)
+            ORDER BY ATUAL.DATA 
+            ROWS UNBOUNDED PRECEDING
+        )														AS FATURAMENTO_ACUMULADO,
+
+	-- CALCULANDO VIA TABELA DE FREQUENCIA
+	-- Acumulado META mês até hoje
+    CAST(SUM(B.META) 
+          OVER (
+            PARTITION BY YEAR(B.DATA), 
+                         MONTH(B.DATA)
+            ORDER BY B.DATA 
+            ROWS UNBOUNDED PRECEDING
+        ) AS float)												AS META_ACUMULADA,
+        
+	-- CALCULANDO VIA TABELA DE FREQUENCIA --
+    -- Crescimento YoY: (acumulado atual / acumulado anterior) - 1
+    (( 
+      SUM(ATUAL.FATURAMENTO) 
+        OVER (
+          PARTITION BY YEAR(ATUAL.DATA), 
+                       MONTH(ATUAL.DATA)
+          ORDER BY ATUAL.DATA 
+          ROWS UNBOUNDED PRECEDING
+        )
+      /
+      NULLIF(
+        SUM(ANT.FATURAMENTO) 
+          OVER (
+            PARTITION BY YEAR(ANT.DATA), 
+                         MONTH(ANT.DATA)
+            ORDER BY ATUAL.DATA 
+            ROWS UNBOUNDED PRECEDING
+          )
+      , 0)
+    ) - 1)													AS CRESCIMENTO_ACUMULADO,
+
+	---- CALCULADO VIA TABELA DE FREQUENCIA ----
+	---- ALCANCE DE MTD (MONTH TO DAY)
+	( 
+      SUM(ATUAL.FATURAMENTO) 
+        OVER (
+          PARTITION BY YEAR(ATUAL.DATA), 
+                       MONTH(ATUAL.DATA)
+          ORDER BY ATUAL.DATA 
+          ROWS UNBOUNDED PRECEDING
+        )
+      /
+      NULLIF(
+        SUM(B.META) 
+          OVER (
+            PARTITION BY YEAR(B.DATA), 
+                         MONTH(B.DATA)
+            ORDER BY B.DATA 
+            ROWS UNBOUNDED PRECEDING
+          )
+      , 0)
+    ) 														AS ALCANCE_ACUMULADO
+
+FROM 
+    BASE_VENDAS ATUAL
+
+LEFT JOIN 
+    BASE_VENDAS ANT
+     ON ANT.DATA = DATEADD(YEAR, -1, ATUAL.DATA)
+
+LEFT JOIN 
+    BASE_METAS B
+     ON B.DATA = ATUAL.DATA
+
+)
+
+SELECT 
+    DATA,
+    FATURAMENTO_ONTEM,
+    META_ONTEM,
+    FATURAMENTO_ACUMULADO,
+    META_ACUMULADA,
+    ALCANCE_ONTEM,
+    CRESCIMENTO_ACUMULADO,
+    ALCANCE_ACUMULADO
+FROM
+  DF_VENDAS
+
+WHERE 
+  DATA = CAST(GETDATE() -1 AS date)

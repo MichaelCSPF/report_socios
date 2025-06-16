@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório Gerencial</title>
+    <style>
+        /* --- ESTILO GERAL "CLEAN" --- */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 8px; /* Adiciona um pouco de espaço nas bordas do e-mail */
+            background-color: #f4f7f6; /* Um cinza muito claro, quase branco */
+            color: #333333;
+        }
+        .container {
+            background-color: #ffffff; /* Conteúdo em fundo branco */
+            padding: 6px 8px; /* Espaçamento interno (vertical, horizontal) */
+            margin: 0 auto;
+            max-width: 950px;
+            border-radius: 16px; /* Cantos levemente arredondados */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra muito sutil */
+        }
+
+        /* --- ESTILOS DA TABELA --- */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 6px;
+            font-size: 0.8em; /* Fonte um pouco menor para tabelas mais compactas */
+        }
+        
+        /* --- Células de Dados (TD) --- */
+        td {
+            border: 1px solid #e0e0e0; /* Bordas mais suaves */
+            padding: 6px;
+            text-align: center; /* Mantém os dados alinhados à esquerda */
+            white-space: nowrap;
+        }
+        
+        /* --- CABEÇALHO DA TABELA (TH) - ATUALIZADO --- */
+        th {
+            background-color: #eaf0f6; /* Um azul bem claro e suave, como na imagem */
+            color: #2d3748; /* Texto escuro para contraste */
+            font-weight: bold;
+            padding: 6px; /* Espaçamento interno consistente */
+            border: 1px solid #d0d8e0;
+            white-space: nowrap;
+            /* AQUI ESTÁ A MUDANÇA PRINCIPAL: */
+            text-align: center; /* Centraliza o texto do cabeçalho */
+        }
+
+        /* Linhas alternadas - mantidas para boa legibilidade */
+        tr:nth-child(even) {
+            background-color: #fdfdfd;
+        }
+        
+        h2 { /* Estilo para o título do componente */
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 6px;
+            padding-top: 10px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            font-size: 1.2em;
+            color: #1a237e; /* Um azul corporativo mais sóbrio */
+
+        }
+
+        .footer {
+            margin-top: 10px;
+            font-size: 0.8em;
+            text-align: center;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- O conteúdo dinâmico (tabelas e títulos) continua a ser inserido aqui -->
+        {{ content|safe }}
+        
+        <div class="footer">
+            <p>Este é um e-mail gerado automaticamente.</p>
+        </div>
+    </div>
+</body>
+</html>

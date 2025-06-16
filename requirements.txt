@@ -1,0 +1,6 @@
+pandas
+sqlalchemy
+python-dotenv
+jinja2
+pyodbc
+logging
